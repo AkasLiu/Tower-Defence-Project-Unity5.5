@@ -13,7 +13,8 @@ public class BuildManager : MonoBehaviour{
     //当前选择的炮台
     private TurretData selectTurretData;
     public Text moneyText;
-    private int money=1000;
+    public Animator moneyAnimator;
+    private int money=1000;  
 
     void ChangeMoney(int change = 0)
     {
@@ -34,7 +35,7 @@ public class BuildManager : MonoBehaviour{
                 if (isCollider)
                 {
                     MapCube mapCube = hit.collider.GetComponent<MapCube>();
-                    if (mapCube.turretGo == null)
+                    if (selectTurretData != null && mapCube.turretGo == null)
                     {
                         //可以创建
                         if (money > selectTurretData.cost)
@@ -45,9 +46,10 @@ public class BuildManager : MonoBehaviour{
                         else
                         {
                             //TODO 提示钱不够
+                            moneyAnimator.SetTrigger("Flicker");
                         }
                     }
-                    else
+                    else if(mapCube.turretGo != null)
                     {
                         //TODO 升级处理
 
