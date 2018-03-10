@@ -7,7 +7,8 @@ public class Enemy : MonoBehaviour {
     public float speed = 10;
     private Transform[] positions;
     private int index=0;
-
+    public int hp = 150;
+    public GameObject enemyExplosionEffectPrefab;
 
 	// Use this for initialization
 	void Start () {
@@ -45,6 +46,25 @@ public class Enemy : MonoBehaviour {
     void OnDestroy()
     {
         EnemySpawner.CountEnemyAlive--;
+    }
+
+    public void TakeDamage(int damage)
+    {
+        //if (hp <= 0)
+          //  return;
+        hp -= damage;
+        if (hp <= 0)
+        {
+            Die();
+        }
+    }
+
+    void Die()
+    {
+        Destroy(this.gameObject);
+        GameObject enemyExplosionEffect = GameObject.Instantiate(enemyExplosionEffectPrefab, transform.position, transform.rotation);
+        Destroy(enemyExplosionEffect,1.5f);
+        
     }
 
 }

@@ -31,7 +31,7 @@ public class BuildManager : MonoBehaviour{
             {
                 Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);//发出一条以摄像机位置为起点，并且穿过鼠标按下的点的 坐标 的射线
                 RaycastHit hit;
-                bool isCollider=Physics.Raycast(ray,out hit, 1000, LayerMask.GetMask("MapCube"));
+                bool isCollider=Physics.Raycast(ray,out hit, 1000, LayerMask.GetMask("MapCube"));    
                 if (isCollider)
                 {
                     MapCube mapCube = hit.collider.GetComponent<MapCube>();
