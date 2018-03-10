@@ -7,6 +7,7 @@ public class Turret : MonoBehaviour {
     public List<GameObject> enemys=new List<GameObject>();
     public GameObject bulletPrefab;
     public Transform bulletPosition;
+    public Transform head;
     private float timer = 0;
     public int attackRateTime = 1;      //1秒攻击一次
 
@@ -38,6 +39,12 @@ public class Turret : MonoBehaviour {
         {
             Attack();
             timer = 0 ;
+        }
+        if (enemys.Count > 0 && enemys[0] != null)
+        {
+            Vector3 targetPosition = enemys[0].transform.position;
+            targetPosition.y = head.position.y;
+            head.LookAt(targetPosition);
         }
     }
 
