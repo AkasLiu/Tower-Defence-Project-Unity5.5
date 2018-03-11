@@ -10,16 +10,28 @@ public class BuildManager : MonoBehaviour{
     public TurretData missileTurretData;
     public TurretData standardTurretdata;
 
-    //当前选择的炮台
+    //当前选择的炮台(要建造的炮台)
     private TurretData selectTurretData;
+    //游戏场景中选择的炮台
+    private MapCube selectMapCube;
+
+    private Animator upgradeCanvasAnimator;
+
     public Text moneyText;
     public Animator moneyAnimator;
-    private int money=1000;  
+    private int money=1000;
+    public GameObject upgradeCanvas;
+    public Button buttonUpgrade;
 
     void ChangeMoney(int change = 0)
     {
         money += change;
         moneyText.text = "￥" + money;
+    }
+
+    private void Start()
+    {
+        upgradeCanvasAnimator = upgradeCanvas.GetComponent<Animator>();
     }
 
     private void Update()
@@ -40,7 +52,8 @@ public class BuildManager : MonoBehaviour{
                         //可以创建
                         if (money > selectTurretData.cost)
                         {
-                            mapCube.BuildTurret(selectTurretData.TurretPerfab);
+                            mapCube.BuildTurret(selectTurretData);
+                            //HideUpgradeUI();
                             ChangeMoney(-selectTurretData.cost);
                         }
                         else
@@ -51,11 +64,17 @@ public class BuildManager : MonoBehaviour{
                     }
                     else if(mapCube.turretGo != null)
                     {
-                        //TODO 升级处理
-
-
+                        // 升级处理
+                        if (mapCube == selectMapCube && upgradeCanvas.activeInHierarchy)
+                        {
+                            StartCoroutine(HideUpgradeUI());
+                        }
+                        else
+                        {
+                            ShowUpgradeUI(mapCube.transform.position, mapCube.isUpgraded);
+                        }
+                        selectMapCube = mapCube;
                     }
-                    //Debug.Log(mapCube);
                 }
             }
         }    
@@ -83,6 +102,36 @@ public class BuildManager : MonoBehaviour{
         {
             selectTurretData = standardTurretdata;
         }
+    }
+
+    void ShowUpgradeUI(Vector3 pos, bool isDisableUpgrade = false)
+    {
+        StopCoroutine("Hide");
+        upgradeCanvas.SetActive(false);
+        upgradeCanvas.SetActive(true);
+        upgradeCanvas.transform.position = pos;
+        buttonUpgrade.interactable = !isDisableUpgrade;
+    }
+
+    IEnumerator HideUpgradeUI()
+    {
+        upgradeCanvasAnimator.SetTrigger("Hide");
+        yield return new WaitForSeconds(0.3f);
+        upgradeCanvas.SetActive(false);
+    }
+
+    public void OnUpgradeButtonDown()
+    {
+        //TODO
+        selectMapCube.UpgradeTurret();
+        StartCoroutine(HideUpgradeUI());
+    }
+
+    public void OnDismantleButtonDown()
+    {
+        //TODO
+        selectMapCube.DismanTleTurret();
+        StartCoroutine(HideUpgradeUI());
     }
 
 }

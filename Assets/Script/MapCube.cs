@@ -6,8 +6,11 @@ using UnityEngine.EventSystems;
 public class MapCube : MonoBehaviour {
     [HideInInspector]
     public GameObject turretGo;     //保存当前cube身上的炮台
+    [HideInInspector]
+    public bool isUpgraded = false;
     public GameObject buildEffect;
     private Renderer renderer;
+    private TurretData turretData;
 
     void Start()
     {
@@ -27,9 +30,21 @@ public class MapCube : MonoBehaviour {
         renderer.material.color = Color.white;
     }
 
-    public void BuildTurret(GameObject turretPrefab)
+    public void UpgradeTurret()
     {
-        turretGo=GameObject.Instantiate(turretPrefab, transform.position, Quaternion.identity);
+
+    }
+
+    public void DismanTleTurret()
+    {
+
+    }
+
+    public void BuildTurret(TurretData turretData)
+    {
+        this.turretData = turretData;
+        isUpgraded = false;
+        turretGo=GameObject.Instantiate(turretData.TurretPerfab, transform.position, Quaternion.identity);
         GameObject effect= GameObject.Instantiate(buildEffect, transform.position, Quaternion.identity);
         Destroy(effect, 1);
     } 
